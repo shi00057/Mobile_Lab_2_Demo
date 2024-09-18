@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
 
-  String _imageSource = 'Images/question-mark.png';
+  var imageSource = 'Images/question-mark.png';
 
   @override
   void initState() {
@@ -56,9 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
     String password = _passwordController.text;
     setState(() {
       if (password == 'QWERTY123') {
-        _imageSource = 'Images/idea.png';
+        imageSource = 'Images/idea.png';
       } else {
-        _imageSource = 'Images/stop.png';
+        imageSource = 'Images/stop.png';
       }
     });
   }
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ),
             Image.asset(
-              _imageSource,
+              imageSource,
               width: 300,
               height: 300,
             ),
