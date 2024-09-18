@@ -36,6 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
+
+  String _imageSource = 'Images/question-mark.png';
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+  void _checkPassword() {
+    String password = _passwordController.text;
+    setState(() {
+      if (password == 'QWERTY123') {
+        _imageSource = 'Images/idea.png';
+      } else {
+        _imageSource = 'Images/stop.png';
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -85,19 +98,17 @@ class _MyHomePageState extends State<MyHomePage> {
               hintText: 'Password',
               border: OutlineInputBorder(),
             ),
-            obscureText: true,
+
             ),
             ElevatedButton(
-              onPressed: () {
 
-                String password = _passwordController.text;
+                onPressed: _checkPassword,
 
-              },
               child: const Text('Login'),
 
             ),
             Image.asset(
-              'Images/question-mark.png',
+              _imageSource,
               width: 300,
               height: 300,
             ),
