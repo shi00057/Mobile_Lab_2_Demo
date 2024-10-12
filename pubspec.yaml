@@ -10,16 +10,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sqflite: ^2.0.0+4
+  floor: ^1.5.0
   cupertino_icons: ^1.0.8
   flutter_secure_storage: ^8.0.0
   shared_preferences: ^2.0.15
   url_launcher: ^6.2.4
+  file_picker: ^5.0.0
+
+
+  path: ^1.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-
+  floor_generator: ^1.4.0
+  build_runner: ^2.1.13
+  mockito: ^5.1.0
 flutter:
   uses-material-design: true
   assets:
