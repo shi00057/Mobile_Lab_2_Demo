@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var items = <String>["Item test1", "Item test2"];
+  var items = <String>["Finish this Lab", "Finish this Quiz"];
   TextEditingController _input = TextEditingController();
 
 
@@ -66,7 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Flexible(child: TextField(
                 controller: _input,
-                decoration: InputDecoration(hintText: "Enter a todo item"),)),
+                decoration: InputDecoration(hintText: "Enter a search term"
+                ,border: OutlineInputBorder(),),
+              )),
             ],),
 
             Expanded(
