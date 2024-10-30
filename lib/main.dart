@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'app_database.dart';
-import 'todo_item.dart';
-import 'todo_item_dao.dart';
-
+import 'app_database.dart'; // import your database class
+import 'todo_item.dart';   // import your item model
+import 'todo_item_dao.dart'; // import your DAO interface
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +12,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final AppDatabase database;
 
-  MyApp({required this.database});
+  const MyApp({super.key, required this.database});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
   final AppDatabase database;
 
-  const MyHomePage({Key? key, required this.title, required this.database}) : super(key: key);
+  const MyHomePage({super.key, required this.title, required this.database});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -41,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late TodoItemDao _todoDao;
   List<TodoItem> _items = [];
-  final TextEditingController _inputController = TextEditingController();
+  final TextEditingController _input = TextEditingController();
 
   @override
   void initState() {
@@ -50,23 +49,26 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadItems();
   }
 
+  // Loads items from the database
   void _loadItems() async {
     _items = await _todoDao.getAllTodos();
     setState(() {});
   }
 
+  // Adds a new item to the list and database
   void _addItem() async {
-    if (_inputController.text.isNotEmpty) {
-      final newItem = TodoItem(description: _inputController.text);
-      await _todoDao.insertTodoItem(newItem);
-      _inputController.clear();
-      _loadItems();
+    if (_input.text.isNotEmpty) {
+      final newItem = TodoItem(description: _input.text);
+      await _todoDao.insertTodoItem(newItem); // Save to database
+      _input.clear();
+      _loadItems(); // Reload items from database
     }
   }
 
+  // Deletes an item from the list and database
   void _deleteItem(TodoItem item) async {
-    await _todoDao.deleteTodoItem(item);
-    _loadItems();
+    await _todoDao.deleteTodoItem(item); // Delete from database
+    _loadItems(); // Reload items from database
   }
 
   @override
@@ -88,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Flexible(
                   child: TextField(
-                    controller: _inputController,
+                    controller: _input,
                     decoration: InputDecoration(
                       hintText: "Enter a todo item",
                       border: OutlineInputBorder(),
@@ -98,23 +100,63 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
+              child: _items.isEmpty
+                  ? Center(
+                child: Text(
+                  "There are no items in the list",
+                  style: TextStyle(fontSize: 16),
+                ),
+              )
+                  : ListView.builder(
                 itemCount: _items.length,
-                itemBuilder: (context, index) {
-                  final item = _items[index];
+                itemBuilder: (context, rowNum) {
+                  final item = _items[rowNum];
                   return GestureDetector(
-                    onLongPress: () => _deleteItem(item),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("Item $index:"),
-                        Text(item.description),
-                      ],
+                    onLongPress: () {
+                      // Show a dialog to confirm deletion
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Delete Item"),
+                            content: Text("Are you sure you want to delete this item?"),
+                            actions: [
+                              // If "No" is pressed, close the dialog without deleting the item
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Close the dialog
+                                },
+                                child: Text("No"),
+                              ),
+                              // If "Yes" is pressed, delete the item and close the dialog
+                              TextButton(
+                                onPressed: () {
+                                  _deleteItem(item); // Delete from list and database
+                                  Navigator.of(context).pop(); // Close the dialog
+                                },
+                                child: Text("Yes"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical spacing
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text("Item $rowNum:"),
+                            Text(item.description)
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
               ),
-            ),
+            )
           ],
         ),
       ),
