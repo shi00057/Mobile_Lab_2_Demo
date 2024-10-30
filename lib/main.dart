@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: items.isEmpty
                   ? Center(
                 child: Text(
-                  "There are no items in the list.",gi
+                  "There are no items in the list.",
                   style: TextStyle(fontSize: 16),
                 ),
               )
