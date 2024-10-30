@@ -73,24 +73,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
             Expanded(
               child: ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, rowNum){
-                    return GestureDetector(
-                      onLongPress: (){
-                        setState(() {
-                          items.removeAt(rowNum);
-                        });
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(" Item ${rowNum}:"),
-                          Text("${items[rowNum]}")
-                        ],
+                itemCount: items.length,
+                itemBuilder: (context, rowNum) {
+                  return GestureDetector(
+                    onLongPress: () {
+                      // Show a dialog to confirm deletion
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Delete Item"),
+                            content: Text("Are you sure you want to delete this item?"),
+                            actions: [
+                              // If "No" is pressed, close the dialog without deleting the item
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Close the dialog
+                                },
+                                child: Text("No"),
+                              ),
+                              // If "Yes" is pressed, delete the item and close the dialog
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    items.removeAt(rowNum); // Delete the item from the list
+                                  });
+                                  Navigator.of(context).pop(); // Close the dialog
+                                },
+                                child: Text("Yes"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical spacing
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text("Item $rowNum:"),
+                            Text("${items[rowNum]}")
+                          ],
+                        ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             )
+
+
 
           ],
         ),
