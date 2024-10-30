@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var items = <String>["Finish this Lab", "Finish this Quiz"];
+  var items = <String>[];
   TextEditingController _input = TextEditingController();
 
 
@@ -72,7 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ],),
 
             Expanded(
-              child: ListView.builder(
+              child: items.isEmpty
+                  ? Center(
+                child: Text(
+                  "There are no items in the list",
+                  style: TextStyle(fontSize: 16),
+                ),
+              )
+                  : ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, rowNum) {
                   return GestureDetector(
@@ -123,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             )
+
 
 
 
